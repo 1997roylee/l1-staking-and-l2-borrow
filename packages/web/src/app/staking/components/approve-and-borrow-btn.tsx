@@ -30,7 +30,7 @@ export default function ApproveAndBorrowBtn({
   });
 
   useEffect(() => {
-    if (toastId.current && isApprovalSuccess && !isBorrowLoading) {
+    if (toastId.current && isApprovalSuccess) {
       toast.success(
         "Borrow Confirmed: Transaction ID: " + borrowReceipt.transactionHash,
         {
@@ -43,7 +43,7 @@ export default function ApproveAndBorrowBtn({
       onBorrow?.();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isApprovalSuccess, isBorrowLoading]);
+  }, [isApprovalSuccess]);
   const handleApprove = async () => {
     try {
       toastId.current = await toast.loading("Borrowing...");

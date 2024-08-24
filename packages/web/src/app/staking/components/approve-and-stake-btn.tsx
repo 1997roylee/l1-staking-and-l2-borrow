@@ -44,13 +44,13 @@ export default function ApproveAndStakeBtn({
   });
 
   useEffect(() => {
-    if (toastId.current && isStakeSuccess && !isStakeLoading) {
+    if (toastId.current && isStakeSuccess) {
       onStaked?.();
 
       toast.success("Staked tokens successfully!", { id: toastId.current });
       toastId.current = undefined;
     }
-  }, [isStakeSuccess, isStakeLoading]);
+  }, [isStakeSuccess]);
 
   const handleStake = async () => {
     const ask = confirm("Are you sure you want to stake 0.001 ETH?");

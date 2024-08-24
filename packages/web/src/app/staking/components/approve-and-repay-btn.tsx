@@ -50,6 +50,7 @@ export default function ApproveAndRepayBtn({
     isLoading: isRepayLoading,
     isSuccess: isRepaySuccess,
     data: repayReceipt,
+    error: repayError,
   } = useWaitForTransactionReceipt({
     hash: repayData,
     chainId: 2227728,
@@ -59,6 +60,7 @@ export default function ApproveAndRepayBtn({
     isLoading: isApproveLoading,
     isSuccess: isApproveSuccess,
     data: approveReceipt,
+    error: approveError,
   } = useWaitForTransactionReceipt({
     hash: approveData,
     chainId: 2227728,
@@ -77,8 +79,9 @@ export default function ApproveAndRepayBtn({
     args: [account.address!, L2_BORROW_COLLATERAL],
   });
 
+  console.log("allowance", allowance);
   useEffect(() => {
-    if (toastId.current && isApproveSuccess && !isApproveLoading) {
+    if (isApproveSuccess) {
       toast.success(
         "Approve Confirmed: : Transaction ID: " +
           approveReceipt.transactionHash,
@@ -88,11 +91,16 @@ export default function ApproveAndRepayBtn({
       );
       refetchAllowance();
       toastId.current = undefined;
+    } else if (approveError) {
+      toast.error("Error approving", {
+        id: toastId.current,
+      });
+      toastId.current = undefined;
     }
-  }, [isApproveSuccess, isApproveLoading]);
+  }, [isApproveSuccess]);
 
   useEffect(() => {
-    if (toastId.current && isRepaySuccess && !isRepayLoading) {
+    if (toastId.current && isRepaySuccess) {
       toast.success(
         "Repay Confirmed: : Transaction ID: " + repayReceipt.transactionHash,
         {
@@ -103,7 +111,7 @@ export default function ApproveAndRepayBtn({
       onRepay?.();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isRepaySuccess, isRepayLoading]);
+  }, [isRepaySuccess]);
 
   const handleRepay = async () => {
     if (allowance !== toRepayBalance) {

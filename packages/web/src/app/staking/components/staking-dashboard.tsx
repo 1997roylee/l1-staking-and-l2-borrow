@@ -55,7 +55,7 @@ export default function StakingDashboard() {
   });
 
   return (
-    <div className="min-h-screen bg-purple-950 text-white p-8">
+    <div className="min-h-screen text-white p-8">
       <h1 className="text-4xl font-bold mb-6">My Tokens</h1>
       <Card className="bg-purple-900 rounded-lg shadow-lg">
         <CardContent className="grid grid-cols-4 gap-6 p-6">

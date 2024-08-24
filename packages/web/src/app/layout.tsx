@@ -4,6 +4,7 @@ import "./globals.css";
 import Link from "next/link";
 import Providers from "@/components/providers";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { cn } from "@/lib/utils";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,15 +20,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={cn(inter.className, "bg-purple-950")}>
         <Providers>
           <nav className="bg-purple-900 p-4 flex items-center">
             <ul className="flex space-x-4 flex-1">
-              <li>
+              {/* <li>
                 <Link href="/" className="text-white hover:text-gray-300">
                   Home
                 </Link>
-              </li>
+              </li> */}
               <li>
                 <Link
                   href="/staking"
