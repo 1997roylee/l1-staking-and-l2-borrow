@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { L2_BORROW_COLLATERAL } from "@/constants";
 import { parseEther } from "viem";
 import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
-import L2BorroweAbi from "../../abis/L2Borrow";
+import L2BorroweAbi from "../../../abis/L2Borrow";
 import { useEffect, useRef } from "react";
 import toast from "react-hot-toast";
 
@@ -17,17 +17,26 @@ export default function ApproveAndBorrowBtn({
 
   const {
     writeContract,
-    data: approveData,
+    data: borrowData,
     isPending: isL2Loading,
   } = useWriteContract();
   const {
     isLoading: isBorrowLoading,
     isSuccess: isApprovalSuccess,
     data: borrowReceipt,
+    error,
   } = useWaitForTransactionReceipt({
-    hash: approveData,
+    hash: borrowData,
     chainId: 2227728,
   });
+
+  console.log(
+    "borrowReceipt",
+    borrowReceipt,
+    isBorrowLoading,
+    isApprovalSuccess,
+    error,
+  );
 
   useEffect(() => {
     if (toastId.current && isApprovalSuccess) {
@@ -46,7 +55,7 @@ export default function ApproveAndBorrowBtn({
   }, [isApprovalSuccess]);
   const handleApprove = async () => {
     try {
-      toastId.current = await toast.loading("Borrowing...");
+      toastId.current = await toast.loading("Borrowing 0.001 MockErc20...");
       await writeContract({
         abi: L2BorroweAbi,
         address: L2_BORROW_COLLATERAL,
@@ -64,11 +73,12 @@ export default function ApproveAndBorrowBtn({
 
   return (
     <Button
-      className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded w-full"
+      className="bg-[#ff684b] border border-[#ff684b] text-[#fff] font-medium py-5 px-6 rounded-lg w-full"
       onClick={handleApprove}
+      variant="ghost"
       disabled={isL2Loading || isBorrowLoading}
     >
-      Borrow 0.001 MockERC20
+      Borrow (0.001) MockERC20
     </Button>
   );
 }

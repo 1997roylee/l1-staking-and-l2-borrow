@@ -4,8 +4,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Loading() {
   return (
-    <div className="min-h-screen bg-black text-white p-8">
-      <h1 className="text-3xl font-bold mb-6">L1sload Oracle</h1>
+    <div className="min-h-screen bg-black text-[#101010] p-8">
+      <h1 className="text-3xl font-medium mb-6">L1sload Oracle</h1>
       <Card className="bg-gray-900">
         <CardContent>
           <div className="space-y-2">

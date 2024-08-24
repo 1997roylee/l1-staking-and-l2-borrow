@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Poppins } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
 import Providers from "@/components/providers";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { cn } from "@/lib/utils";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Poppins({ subsets: ["latin"], weight: ["400", "500", "700"] });
 
 export const metadata: Metadata = {
   title: "L1sload Oracle",
@@ -20,19 +20,19 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={cn(inter.className, "bg-purple-950")}>
+      <body className={cn(inter.className, "bg-[#fff8f3]")}>
         <Providers>
-          <nav className="bg-purple-900 p-4 flex items-center">
+          <nav className="p-4 flex items-center">
             <ul className="flex space-x-4 flex-1">
               {/* <li>
-                <Link href="/" className="text-white hover:text-gray-300">
+                <Link href="/" className="text-[#101010] hover:text-gray-300">
                   Home
                 </Link>
               </li> */}
               <li>
                 <Link
                   href="/staking"
-                  className="text-white hover:text-gray-300"
+                  className="text-[#101010] text-lg hover:bg-[#fff0dd] p-3"
                 >
                   Staking
                 </Link>

@@ -10,7 +10,7 @@ async function mainDefi() {
   let ethStakingContract = await contractFactory.deploy();
   ethStakingContract = await ethStakingContract.waitForDeployment();
 
-  console.log("L1Storage deployed to:", await ethStakingContract.getAddress());
+  console.log("L1 Contract deployed to:", await ethStakingContract.getAddress());
 
   const amount = 0.001;
   const amountInWei = ethers.parseEther(amount.toString());
@@ -18,7 +18,7 @@ async function mainDefi() {
   const tx = await ethStakingContract.connect(signer).stake({
     value: amountInWei,
   });
-  const receipt = (await tx).wait();
+  const receipt = await (tx.wait());
   console.log("Stake successful!", receipt);
 }
 

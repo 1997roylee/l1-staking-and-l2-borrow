@@ -56,7 +56,7 @@ export default function L1Dashboard({ initialData }: L1DashboardProps) {
     return (
       <Card className="bg-gray-900">
         <CardContent>
-          <p className="text-white">{error}</p>
+          <p className="text-[#101010]">{error}</p>
         </CardContent>
       </Card>
     );
@@ -68,9 +68,9 @@ export default function L1Dashboard({ initialData }: L1DashboardProps) {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="text-white">#</TableHead>
-              <TableHead className="text-white">Name</TableHead>
-              <TableHead className="text-white text-right">Price</TableHead>
+              <TableHead className="text-[#101010]">#</TableHead>
+              <TableHead className="text-[#101010]">Name</TableHead>
+              <TableHead className="text-[#101010] text-right">Price</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -86,21 +86,21 @@ export default function L1Dashboard({ initialData }: L1DashboardProps) {
               : // Data display
                 l1Data.map((l1) => (
                   <TableRow key={l1.id}>
-                    <TableCell className="font-medium text-white">
+                    <TableCell className="font-medium text-[#101010]">
                       {l1.id}
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center">
                         <div className="w-6 h-6 mr-2 bg-gray-700 rounded-full"></div>
                         <div className="flex flex-col">
-                          <span className="text-white">{l1.name}</span>
+                          <span className="text-[#101010]">{l1.name}</span>
                           <span className="text-sm text-gray-400">
                             {l1.symbol}
                           </span>
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell className="text-right text-white">
+                    <TableCell className="text-right text-[#101010]">
                       $
                       {l1.price.toLocaleString(undefined, {
                         minimumFractionDigits: 2,

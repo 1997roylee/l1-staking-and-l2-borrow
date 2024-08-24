@@ -7,10 +7,11 @@ import {
   useAccount,
   useReadContract,
 } from "wagmi";
-import L2BorroweAbi from "../../abis/L2Borrow";
+import L2BorroweAbi from "../../../abis/L2Borrow";
 import { useEffect, useRef } from "react";
 import toast from "react-hot-toast";
 import { erc20Abi, formatEther, parseEther } from "viem";
+import { useTokenApproval } from "@/hooks/use-approve";
 
 export type ApproveAndRepayBtnProps = {
   onRepay?: () => void;
@@ -35,16 +36,18 @@ export default function ApproveAndRepayBtn({
       ? (borrorwedBalance as bigint)
       : balance?.value;
 
+  const { handleApprove, allowance, isAllowanceLoading, isAllowanceFetching } =
+    useTokenApproval(toRepayBalance ?? BigInt(0));
   const {
     writeContract,
     data: repayData,
     // isPending: isRepayLoading,
   } = useWriteContract();
-  const {
-    writeContract: approveContract,
-    data: approveData,
-    // isPending: isApproveLoading,
-  } = useWriteContract();
+  // const {
+  //   writeContract: approveContract,
+  //   data: approveData,
+  //   // isPending: isApproveLoading,
+  // } = useWriteContract();
 
   const {
     isLoading: isRepayLoading,
@@ -56,48 +59,28 @@ export default function ApproveAndRepayBtn({
     chainId: 2227728,
   });
 
-  const {
-    isLoading: isApproveLoading,
-    isSuccess: isApproveSuccess,
-    data: approveReceipt,
-    error: approveError,
-  } = useWaitForTransactionReceipt({
-    hash: approveData,
-    chainId: 2227728,
-  });
+  // const {
+  //   isLoading: isApproveLoading,
+  //   isSuccess: isApproveSuccess,
+  //   data: approveReceipt,
+  //   error: approveError,
+  // } = useWaitForTransactionReceipt({
+  //   hash: approveData,
+  //   chainId: 2227728,
+  // });
 
-  const {
-    data: allowance,
-    refetch: refetchAllowance,
-    isLoading: isAllowanceLoading,
-    isFetching: isAllowanceFetching,
-  } = useReadContract({
-    abi: erc20Abi,
-    address: MOCK_ERC_20,
-    chainId: 2227728,
-    functionName: "allowance",
-    args: [account.address!, L2_BORROW_COLLATERAL],
-  });
-
-  console.log("allowance", allowance);
-  useEffect(() => {
-    if (isApproveSuccess) {
-      toast.success(
-        "Approve Confirmed: : Transaction ID: " +
-          approveReceipt.transactionHash,
-        {
-          id: toastId.current,
-        },
-      );
-      refetchAllowance();
-      toastId.current = undefined;
-    } else if (approveError) {
-      toast.error("Error approving", {
-        id: toastId.current,
-      });
-      toastId.current = undefined;
-    }
-  }, [isApproveSuccess]);
+  // const {
+  //   data: allowance,
+  //   refetch: refetchAllowance,
+  //   isLoading: isAllowanceLoading,
+  //   isFetching: isAllowanceFetching,
+  // } = useReadContract({
+  //   abi: erc20Abi,
+  //   address: MOCK_ERC_20,
+  //   chainId: 2227728,
+  //   functionName: "allowance",
+  //   args: [account.address!, L2_BORROW_COLLATERAL],
+  // });
 
   useEffect(() => {
     if (toastId.current && isRepaySuccess) {
@@ -140,40 +123,42 @@ export default function ApproveAndRepayBtn({
     }
   };
 
-  const handleApprove = async () => {
-    try {
-      toastId.current = await toast.loading("Approving...");
-      await approveContract({
-        abi: erc20Abi,
-        address: MOCK_ERC_20,
-        functionName: "approve",
-        chainId: 2227728,
-        args: [L2_BORROW_COLLATERAL, toRepayBalance ?? BigInt(0)],
-      });
-    } catch (error) {
-      toast.error("Error borrowing", {
-        id: toastId.current,
-      });
-      toastId.current = undefined;
-    }
-  };
+  // const handleApprove = async () => {
+  //   try {
+  //     toastId.current = await toast.loading("Approving...");
+  //     await approveContract({
+  //       abi: erc20Abi,
+  //       address: MOCK_ERC_20,
+  //       functionName: "approve",
+  //       chainId: 2227728,
+  //       args: [L2_BORROW_COLLATERAL, toRepayBalance ?? BigInt(0)],
+  //     });
+  //   } catch (error) {
+  //     toast.error("Error borrowing", {
+  //       id: toastId.current,
+  //     });
+  //     toastId.current = undefined;
+  //   }
+  // };
 
   if (Number(allowance) === 0 || Number(allowance) < Number(toRepayBalance)) {
     return (
       <Button
-        className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded w-full"
+        className="bg-[#ff684b] border border-[#ff684b] text-[#fff] font-medium py-5 px-6 rounded-lg w-full"
         onClick={handleApprove}
+        variant="ghost"
         disabled={Number(borrorwedBalance) <= 0}
       >
-        Authorize Repayment (Approve)
+        Approve ({toRepayBalance ? formatEther(toRepayBalance) : 0}) MockERC20
       </Button>
     );
   }
 
   return (
     <Button
-      className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded w-full"
+      className="bg-[#ff684b] border border-[#ff684b] text-[#fff] font-medium py-5 px-6 rounded-lg w-full"
       onClick={handleRepay}
+      variant="ghost"
       disabled={
         isRepayLoading ||
         Number(borrorwedBalance) <= 0 ||

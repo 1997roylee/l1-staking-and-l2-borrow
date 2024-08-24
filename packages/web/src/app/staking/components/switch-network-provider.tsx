@@ -15,7 +15,7 @@ export default function SwitchNetworkProvider({
   const walletClient = useWalletClient();
   const isCorrectNetwork = useMemo(
     () => walletClient.data?.chain.id === toChainId,
-    [walletClient, toChainId],
+    [walletClient.data?.chain, toChainId],
   );
 
   const handleSwitchNetwork = () => {
@@ -27,8 +27,9 @@ export default function SwitchNetworkProvider({
   if (!isCorrectNetwork) {
     return (
       <Button
-        className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded w-full"
+        className="bg-white border border-[#ff684b] text-[#101010] font-medium py-5 px-6 rounded-lg w-full"
         onClick={handleSwitchNetwork}
+        variant="ghost"
       >
         Connect to {networkName}
       </Button>

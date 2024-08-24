@@ -14,36 +14,36 @@ async function main() {
   await mockErc20Instance.waitForDeployment();
   console.log("MockERC20 deployed to:", await mockErc20Instance.getAddress());
   const mockErc20Address = await mockErc20Instance.getAddress();
-  const l2StorageContractFactory = (await ethers.getContractFactory(
+  const l2BorrowContractFactory = (await ethers.getContractFactory(
     "L2Borrow"
   )) as L2Borrow__factory;
-  let l2StorageContract = await l2StorageContractFactory.deploy(
+  let l2BorrowContract = await l2BorrowContractFactory.deploy(
     mockErc20Address,
-    "0x102E0fA89Ca08aBCA2294a3039a3CaCb970CFc01",
+    "0xf1571F6cF090BDD2f87368098CBbaDFe00682fd0", // Replace with L1 address
     10000
   );
-  await l2StorageContract.waitForDeployment();
+  await l2BorrowContract.waitForDeployment();
 
-  const l2StorageContractAddress = await l2StorageContract.getAddress();
-  console.log("L2Storage deployed to:", l2StorageContractAddress);
+  const l2BorrowContractAddress = await l2BorrowContract.getAddress();
+  console.log("L2 Contract deployed to:", l2BorrowContractAddress);
 
   const transferTx = await mockErc20Instance
     .connect(signer)
-    .transfer(l2StorageContractAddress, ethers.parseEther("1000"));
+    .transfer(l2BorrowContractAddress, ethers.parseEther("1000"));
   await transferTx.wait();
 
   try {
     console.log(
       "Max Borrow",
-      await l2StorageContract.getMaxBorrowAmount(signer.address)
+      await l2BorrowContract.getMaxBorrowAmount(signer.address)
     );
 
     console.log(
       "Defi Pre Balance:",
-      await mockErc20Instance.balanceOf(l2StorageContractAddress)
+      await mockErc20Instance.balanceOf(l2BorrowContractAddress)
     );
     await (
-      await l2StorageContract.connect(signer).borrow(ethers.parseEther("0.001"))
+      await l2BorrowContract.connect(signer).borrow(ethers.parseEther("0.001"))
     ).wait();
 
     const borrowBalance = await mockErc20Instance.balanceOf(signer.address);
@@ -51,17 +51,17 @@ async function main() {
 
     console.log(
       "Defi Post Balance:",
-      await mockErc20Instance.balanceOf(l2StorageContractAddress)
+      await mockErc20Instance.balanceOf(l2BorrowContractAddress)
     );
 
     await (
       await mockErc20Instance.approve(
-        l2StorageContractAddress,
+        l2BorrowContractAddress,
         ethers.parseEther("0.001")
       )
     ).wait();
 
-    const repayTx = await l2StorageContract
+    const repayTx = await l2BorrowContract
       .connect(signer)
       .repay(ethers.parseEther("0.001"));
 

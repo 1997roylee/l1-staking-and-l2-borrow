@@ -6,7 +6,7 @@ import {
   useWaitForTransactionReceipt,
   useWriteContract,
 } from "wagmi";
-import ETHStakingCollateralAbi from "../../abis/ETHStakingCollateral";
+import ETHStakingCollateralAbi from "../../../abis/ETHStakingCollateral";
 import { ETH_STAKING_COLLATERAL } from "@/constants";
 import { parseEther } from "viem";
 import { useEffect, useRef } from "react";
@@ -56,8 +56,7 @@ export default function ApproveAndStakeBtn({
     const ask = confirm("Are you sure you want to stake 0.001 ETH?");
     if (!ask) return;
 
-    // const toastId = toast.loading("Staking tokens...");
-    toastId.current = toast.loading("Staking tokens...");
+    toastId.current = toast.loading("Staking 0.001 ETH...");
     try {
       await writeL1Contract({
         abi: ETHStakingCollateralAbi,
@@ -74,8 +73,9 @@ export default function ApproveAndStakeBtn({
 
   return (
     <Button
-      className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded w-full"
+      className="bg-[#ff684b] border border-[#ff684b] text-[#fff] font-medium py-5 px-6 rounded-lg w-full"
       onClick={handleStake}
+      variant="ghost"
       disabled={isL1Loading || !isSufficientBalance}
     >
       Deposit 0.001 ETH Stake
