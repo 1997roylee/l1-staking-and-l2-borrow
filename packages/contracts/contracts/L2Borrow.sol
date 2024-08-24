@@ -24,7 +24,12 @@ contract L2Borrow is ReentrancyGuard, Ownable {
     mapping(address => uint256) public borrowedBalance;
 
     event Borrowed(address indexed user, uint256 amount, uint256 blockNumber);
-    event Repaid(address indexed user, uint256 amount, bytes32 signature, uint256 nonce);
+    event Repaid(
+        address indexed user,
+        uint256 amount,
+        bytes32 signature,
+        uint256 nonce
+    );
     uint256 private nonce;
 
     constructor(address _borrowToken, address _l1TokenAddress, uint256 _ltv) {
@@ -88,7 +93,7 @@ contract L2Borrow is ReentrancyGuard, Ownable {
 
     function getMaxBorrowAmount(address user) public view returns (uint256) {
         uint256 balance = getUserBalance(user);
-        return balance.mul(ltv).div(BASIS_POINTS);
+        return balance.mul(ltv).div(BASIS_POINTS) - borrowedBalance[user];
     }
 
     function repay(uint256 amount) external nonReentrant returns (bytes32) {
@@ -99,8 +104,14 @@ contract L2Borrow is ReentrancyGuard, Ownable {
         );
         IERC20(borrowToken).safeTransferFrom(msg.sender, address(this), amount);
         borrowedBalance[msg.sender] = borrowedBalance[msg.sender].sub(amount);
-        bytes32 signature = keccak256(abi.encodePacked(address(this), msg.sender, amount));
+        bytes32 signature = keccak256(
+            abi.encodePacked(address(this), msg.sender, amount)
+        );
         emit Repaid(msg.sender, amount, signature, nonce);
         return signature;
+    }
+
+    function getBorrowedBalance(address user) external view returns (uint256) {
+        return borrowedBalance[user];
     }
 }

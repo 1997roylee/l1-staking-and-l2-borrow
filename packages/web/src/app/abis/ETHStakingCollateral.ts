@@ -1,5 +1,4 @@
 export const abi = [
-
   {
     inputs: [],
     name: "getStakedBalance",

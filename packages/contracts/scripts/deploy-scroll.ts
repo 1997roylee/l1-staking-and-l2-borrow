@@ -1,5 +1,5 @@
 import { ethers } from "hardhat";
-import { L2Storage__factory } from "../typechain-types";
+import { L2Borrow__factory } from "../typechain-types";
 
 async function main() {
   const signer = await ethers.provider.getSigner();
@@ -12,10 +12,11 @@ async function main() {
     ethers.parseEther("1000")
   );
   await mockErc20Instance.waitForDeployment();
+  console.log("MockERC20 deployed to:", await mockErc20Instance.getAddress());
   const mockErc20Address = await mockErc20Instance.getAddress();
   const l2StorageContractFactory = (await ethers.getContractFactory(
-    "L2Storage"
-  )) as L2Storage__factory;
+    "L2Borrow"
+  )) as L2Borrow__factory;
   let l2StorageContract = await l2StorageContractFactory.deploy(
     mockErc20Address,
     "0x102E0fA89Ca08aBCA2294a3039a3CaCb970CFc01",

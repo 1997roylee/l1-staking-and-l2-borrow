@@ -5,20 +5,9 @@ import { PropsWithChildren } from "react";
 import { WagmiProvider } from "wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { getDefaultConfig, RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import { sepolia, Chain } from "wagmi/chains";
+import { sepolia } from "wagmi/chains";
 import { Toaster } from "react-hot-toast";
-
-export const scrollSepolia = {
-  id: 2227728,
-  name: 'Scroll Sepolia',
-  nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-  rpcUrls: {
-    default: { http: ['https://l1sload-rpc.scroll.io'] },
-  },
-  blockExplorers: {
-    default: { name: 'Etherscan', url: 'https://etherscan.io' },
-  }
-} as const satisfies Chain
+import { scrollSepolia } from "../../config";
 
 const config = getDefaultConfig({
   appName: "My RainbowKit App",
